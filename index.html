@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aya Ait Tajelt — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --fantasy:  #F0EDE8;
+      --oat:      #C8BBA8;
+      --oat-dark: #B8A890;
+      --mug:      #A8967E;
+      --mug-light:#7A6A56;
+      --choco:    #5C4F3D;
+      --white:    #FFFFFF;
+      --gray:     #9A8E80;
+      --border:   #D5C9B8;
+      --text:     #3A3028;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--fantasy); color:var(--text); line-height:1.6; overflow-x:hidden; }
+
+    .reveal       { opacity:0; transform:translateY(32px);  transition:opacity .65s ease,transform .65s ease; }
+    .reveal-left  { opacity:0; transform:translateX(-32px); transition:opacity .65s ease,transform .65s ease; }
+    .reveal-right { opacity:0; transform:translateX(32px);  transition:opacity .65s ease,transform .65s ease; }
+    .reveal.visible,.reveal-left.visible,.reveal-right.visible { opacity:1; transform:none; }
+
+    /* NAV */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      padding:0 60px; height:66px;
+      display:flex; align-items:center; justify-content:space-between;
+      transition:background .3s,box-shadow .3s;
+    }
+    nav.scrolled { background:rgba(92,79,61,.95); box-shadow:0 2px 20px rgba(0,0,0,.15); }
+    .nav-logo { font-family:'Playfair Display',serif; font-weight:700; font-size:1.1rem; color:var(--fantasy); text-decoration:none; letter-spacing:.02em; }
+    .nav-logo span { color:var(--oat); opacity:.7; }
+    .nav-links { display:flex; gap:36px; list-style:none; }
+    .nav-links a { font-size:.76rem; font-weight:500; letter-spacing:.11em; text-transform:uppercase; color:rgba(240,237,232,.6); text-decoration:none; transition:color .2s; }
+    .nav-links a:hover { color:var(--fantasy); }
+
+    /* HERO */
+    .hero {
+      background:var(--choco);
+      min-height:100vh; display:flex; align-items:center;
+      padding:100px 60px 80px; position:relative; overflow:hidden;
+    }
+    .hero::before {
+      content:''; position:absolute; top:-160px; right:-160px;
+      width:480px; height:480px; border-radius:50%;
+      background:radial-gradient(circle,rgba(168,150,126,.3) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .hero-inner {
+      max-width:1200px; margin:0 auto; width:100%;
+      display:grid; grid-template-columns:1fr 260px;
+      gap:80px; align-items:center; position:relative; z-index:1;
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid rgba(200,187,168,.2); border-radius:100px;
+      padding:6px 15px; font-size:.73rem; font-weight:500;
+      color:rgba(200,187,168,.6); margin-bottom:24px;
+    }
+    .hero-name {
+      font-family:'Playfair Display',serif; font-weight:900;
+      font-size:clamp(3rem,7vw,5rem); line-height:1.05;
+      color:var(--fantasy); margin-bottom:8px;
+    }
+    .hero-name .accent { color:var(--oat); }
+    .hero-role { font-size:.95rem; font-weight:300; color:rgba(240,237,232,.45); margin-bottom:28px; }
+    .hero-divider { width:40px; height:2px; background:var(--oat); opacity:.35; margin-bottom:24px; border-radius:2px; }
+    .hero-text { font-size:.93rem; color:rgba(240,237,232,.6); line-height:1.85; max-width:520px; margin-bottom:40px; }
+    .hero-btns { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn-primary { display:inline-flex; align-items:center; gap:8px; background:var(--oat); color:var(--choco); padding:12px 28px; border-radius:6px; font-size:.86rem; font-weight:700; text-decoration:none; transition:background .2s,transform .2s; cursor:pointer; border:none; }
+    .btn-primary:hover { background:var(--fantasy); transform:translateY(-2px); }
+    .btn-secondary { display:inline-flex; align-items:center; gap:8px; background:transparent; color:var(--fantasy); padding:12px 28px; border-radius:6px; font-size:.86rem; font-weight:500; text-decoration:none; border:1px solid rgba(240,237,232,.2); transition:all .2s; }
+    .btn-secondary:hover { border-color:var(--oat); color:var(--oat); transform:translateY(-2px); }
+
+    /* initiales hero */
+    .hero-right { display:flex; justify-content:center; align-items:center; }
+    .hero-initials {
+      width:220px; height:220px; border-radius:50%;
+      background:linear-gradient(135deg, rgba(168,150,126,0.4), rgba(200,187,168,0.1));
+      border:2px solid rgba(200,187,168,.2);
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Playfair Display',serif; font-weight:900;
+      font-size:4rem; color:var(--oat); letter-spacing:-.02em;
+    }
+
+    /* STATS */
+    .stats-bar { background:var(--mug); padding:28px 60px; }
+    .stats-bar-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:20px; text-align:center; }
+    .stat-num { font-family:'Playfair Display',serif; font-weight:700; font-size:1.8rem; color:var(--fantasy); display:block; }
+    .stat-lbl { font-size:.68rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:rgba(240,237,232,.5); }
+
+    /* LABELS */
+    .section-label { font-size:.7rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--mug); margin-bottom:8px; }
+    .section-title { font-family:'Playfair Display',serif; font-weight:700; font-size:clamp(1.6rem,3.5vw,2.6rem); color:var(--choco); margin-bottom:12px; line-height:1.2; }
+    .section-sub   { font-size:.93rem; color:var(--gray); max-width:460px; margin-bottom:48px; }
+
+    /* TIMELINE */
+    .timeline-section { background:var(--oat); padding:90px 60px; }
+    .timeline-inner { max-width:1200px; margin:0 auto; }
+    .timeline { position:relative; margin-top:40px; }
+    .timeline::before { content:''; position:absolute; left:50%; top:0; bottom:0; width:1px; background:var(--oat-dark); transform:translateX(-50%); }
+    .timeline-item { display:grid; grid-template-columns:1fr 1fr; gap:52px; margin-bottom:40px; align-items:center; position:relative; }
+    .timeline-item::before { content:''; position:absolute; left:50%; top:50%; width:10px; height:10px; border-radius:50%; background:var(--mug); opacity:.6; transform:translate(-50%,-50%); border:2px solid var(--oat); }
+    .timeline-item.right .timeline-content { grid-column:2; grid-row:1; }
+    .timeline-item.right .timeline-empty  { grid-column:1; grid-row:1; }
+    .timeline-content { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:20px; }
+    .timeline-date { font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mug); opacity:.6; margin-bottom:5px; }
+    .timeline-content h3 { font-family:'Playfair Display',serif; font-weight:700; font-size:.95rem; color:var(--choco); margin-bottom:4px; }
+    .timeline-content p  { font-size:.81rem; color:var(--gray); line-height:1.6; }
+
+    /* COMPETENCES */
+    .competences-section { padding:90px 60px; background:var(--fantasy); }
+    .competences-inner { max-width:1200px; margin:0 auto; }
+    .filters { display:flex; gap:9px; flex-wrap:wrap; margin-bottom:40px; }
+    .filter-btn { padding:8px 19px; border-radius:6px; font-size:.78rem; font-weight:600; cursor:pointer; border:1px solid var(--border); background:var(--white); color:var(--text); transition:all .2s; font-family:'DM Sans',sans-serif; }
+    .filter-btn.active,.filter-btn:hover { background:var(--mug); color:var(--fantasy); border-color:var(--mug); }
+    .traces-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .trace-card { background:var(--white); border:1px solid var(--border); border-radius:12px; overflow:hidden; cursor:pointer; transition:transform .25s,box-shadow .25s; display:block; }
+    .trace-card:hover { transform:translateY(-5px); box-shadow:0 16px 40px rgba(92,79,61,.09); }
+    .trace-img-placeholder { width:100%; height:160px; background:linear-gradient(135deg,var(--mug) 0%,var(--mug-light) 100%); display:flex; align-items:center; justify-content:center; font-size:2.6rem; overflow:hidden; }
+    .trace-img-placeholder img { width:100%; height:100%; object-fit:cover; }
+    .trace-body { padding:18px; }
+    .trace-tags { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:8px; }
+    .trace-tag { font-size:.66rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--mug); background:rgba(168,150,126,.07); padding:3px 9px; border-radius:4px; border:1px solid rgba(168,150,126,.15); }
+    .trace-title { font-family:'Playfair Display',serif; font-weight:700; font-size:.95rem; color:var(--choco); margin-bottom:4px; line-height:1.3; }
+    .trace-meta { font-size:.75rem; color:var(--gray); font-style:italic; margin-bottom:9px; }
+    .trace-highlight { font-size:.77rem; font-weight:600; color:var(--choco); background:var(--oat); padding:5px 9px; border-radius:5px; margin-bottom:7px; display:inline-block; }
+    .trace-link { font-size:.79rem; font-weight:600; color:var(--mug); display:inline-flex; align-items:center; gap:4px; margin-top:3px; }
+
+    /* SKILLS */
+    .skills-section { background:var(--oat); padding:90px 60px; }
+    .skills-inner { max-width:1200px; margin:0 auto; }
+    .skills-grid { display:grid; grid-template-columns:1fr 1fr; gap:72px; margin-top:48px; }
+    .skill-group-title { font-family:'Playfair Display',serif; font-weight:700; font-size:1.02rem; color:var(--choco); margin-bottom:24px; padding-bottom:9px; border-bottom:1px solid var(--oat-dark); display:inline-block; }
+    .skill-item { margin-bottom:18px; }
+    .skill-header { display:flex; justify-content:space-between; margin-bottom:6px; }
+    .skill-name { font-size:.84rem; font-weight:600; color:var(--choco); }
+    .skill-pct  { font-size:.77rem; font-weight:600; color:var(--mug); }
+    .skill-bar  { height:4px; background:var(--oat-dark); border-radius:100px; overflow:hidden; }
+    .skill-fill { height:100%; background:linear-gradient(90deg,var(--mug),var(--mug-light)); border-radius:100px; width:0; transition:width 1.2s ease; }
+
+    /* BILAN */
+    .bilan-section { background:var(--fantasy); padding:90px 60px; }
+    .bilan-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:center; }
+    .bilan-text { font-size:.92rem; color:var(--gray); line-height:1.85; margin-bottom:16px; }
+    .bilan-right { display:flex; flex-direction:column; gap:12px; }
+    .bilan-card { background:var(--white); border:1px solid var(--border); border-left:3px solid var(--mug); border-radius:0 10px 10px 0; padding:15px 18px; }
+    .bilan-card h4 { font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mug); margin-bottom:4px; }
+    .bilan-card p  { font-size:.85rem; color:var(--gray); line-height:1.6; }
+
+    /* CONTACT */
+    .contact-section { background:var(--oat); padding:90px 60px; }
+    .contact-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:start; }
+    .contact-item { display:flex; align-items:center; gap:13px; margin-bottom:18px; }
+    .contact-icon { width:40px; height:40px; border-radius:9px; background:var(--white); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:.9rem; flex-shrink:0; }
+    .contact-label { font-size:.66rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gray); }
+    .contact-value { font-size:.87rem; font-weight:500; color:var(--choco); }
+    .form-label { font-size:.66rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gray); display:block; margin-bottom:5px; }
+    .form-input,.form-textarea { width:100%; padding:11px 14px; border:1px solid var(--border); border-radius:7px; font-family:'DM Sans',sans-serif; font-size:.87rem; outline:none; background:var(--white); color:var(--text); transition:border-color .2s; }
+    .form-input:focus,.form-textarea:focus { border-color:var(--mug); }
+    .form-textarea { resize:vertical; }
+    .form-btn { width:100%; background:var(--mug); color:var(--fantasy); padding:13px; border:none; border-radius:7px; font-family:'DM Sans',sans-serif; font-size:.87rem; font-weight:700; cursor:pointer; transition:background .2s; }
+    .form-btn:hover { background:var(--mug-light); }
+
+    /* FOOTER */
+    footer { background:var(--choco); text-align:center; padding:24px; font-size:.75rem; color:rgba(240,237,232,.22); border-top:1px solid rgba(240,237,232,.05); }
+    footer span { color:rgba(240,237,232,.45); }
+
+    /* MODAL */
+    .modal-overlay { position:fixed; inset:0; background:rgba(36,10,14,.82); z-index:200; display:flex; align-items:flex-start; justify-content:center; padding:40px 20px; overflow-y:auto; opacity:0; pointer-events:none; transition:opacity .3s; }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+    .modal { background:var(--fantasy); border-radius:14px; width:100%; max-width:760px; padding:42px; position:relative; transform:translateY(20px); transition:transform .3s; border-top:3px solid var(--mug); }
+    .modal-overlay.open .modal { transform:translateY(0); }
+    .modal-close { position:absolute; top:18px; right:18px; width:32px; height:32px; border-radius:7px; background:var(--oat); border:none; cursor:pointer; font-size:.85rem; display:flex; align-items:center; justify-content:center; color:var(--choco); }
+    .modal-tags { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:14px; }
+    .modal-tag { font-size:.66rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:4px 12px; border-radius:4px; }
+    .modal-tag.dark    { background:var(--choco); color:var(--fantasy); }
+    .modal-tag.mug     { background:var(--mug);   color:var(--fantasy); }
+    .modal-tag.outline { background:var(--white);  color:var(--choco); border:1px solid var(--border); }
+    .modal h2 { font-family:'Playfair Display',serif; font-weight:700; font-size:1.4rem; color:var(--choco); margin-bottom:4px; line-height:1.3; }
+    .modal-source { font-size:.78rem; color:var(--gray); font-style:italic; margin-bottom:26px; }
+    .modal-section { margin-bottom:22px; }
+    .modal-section-title { font-size:.68rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--mug); margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid var(--border); }
+    .modal-section p { font-size:.89rem; line-height:1.78; color:var(--text); }
+    .modal-tools { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:11px; }
+    .tool-tag { background:var(--oat); color:var(--choco); font-size:.73rem; font-weight:500; padding:3px 10px; border-radius:4px; border:1px solid var(--border); }
+    .modal-result-box { background:var(--oat); border-left:3px solid var(--mug); border-radius:0 7px 7px 0; padding:12px 16px; font-size:.85rem; font-weight:600; color:var(--choco); margin-top:7px; }
+    .modal-quote { border-left:2px solid var(--oat-dark); padding:10px 16px; font-style:italic; font-size:.87rem; color:var(--gray); margin-top:12px; }
+
+    /* MEDIA GALLERY IN MODAL */
+    .modal-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px; margin-top:12px; }
+    .modal-gallery img { width:100%; border-radius:8px; object-fit:cover; height:140px; cursor:pointer; transition:transform .2s; border:1px solid var(--border); }
+    .modal-gallery img:hover { transform:scale(1.03); }
+    .modal-download-btn {
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--mug); color:var(--fantasy);
+      padding:10px 20px; border-radius:7px; font-size:.82rem; font-weight:700;
+      text-decoration:none; margin-top:12px; transition:background .2s;
+    }
+    .modal-download-btn:hover { background:var(--mug-light); }
+
+    /* LIGHTBOX */
+    .lightbox { position:fixed; inset:0; background:rgba(0,0,0,.92); z-index:300; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; }
+    .lightbox.open { opacity:1; pointer-events:all; }
+    .lightbox img { max-width:90vw; max-height:90vh; border-radius:8px; object-fit:contain; }
+    .lightbox-close { position:absolute; top:20px; right:24px; color:white; font-size:2rem; cursor:pointer; background:none; border:none; line-height:1; }
+
+    @media(max-width:900px){
+      nav { padding:0 24px; }
+      .hero { padding:100px 24px 60px; }
+      .hero-inner { grid-template-columns:1fr; }
+      .hero-right { display:none; }
+      .stats-bar { padding:26px 24px; }
+      .stats-bar-inner { grid-template-columns:repeat(2,1fr); }
+      .timeline-section,.competences-section,.skills-section,.bilan-section,.contact-section { padding:60px 24px; }
+      .timeline::before { left:18px; }
+      .timeline-item { grid-template-columns:1fr; padding-left:40px; }
+      .timeline-item::before { left:18px; top:20px; }
+      .timeline-item.right .timeline-content { grid-column:1; }
+      .timeline-item.right .timeline-empty { display:none; }
+      .traces-grid { grid-template-columns:1fr; }
+      .skills-grid { grid-template-columns:1fr; gap:32px; }
+      .bilan-inner,.contact-inner { grid-template-columns:1fr; gap:32px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="#" class="nav-logo">Aya <span>AT</span></a>
+  <ul class="nav-links">
+    <li><a href="#accueil">Accueil</a></li>
+    <li><a href="#parcours">Parcours</a></li>
+    <li><a href="#competences">Compétences</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="accueil">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">🎓 Bachelor TC · Marketing Digital & Entrepreneuriat · UVSQ Paris-Saclay</div>
+      <h1 class="hero-name">Aya<br><span class="accent">Ait Tajelt</span></h1>
+      <p class="hero-role">Marketing Digital · Entrepreneuriat · Création de contenu · Analyse de données</p>
+      <div class="hero-divider"></div>
+      <p class="hero-text">Multilingue, curieuse et orientée résultats, j'ai construit un profil ancré dans l'action concrète : création de marques de A à Z, gestion de réseaux sociaux avec des contenus à fort engagement, développement de sites e-commerce, et pilotage de projets entrepreneuriaux réels. Mon moteur : créer, tester, mesurer, itérer.<br><br>À partir de septembre 2026, j'intégrerai le Programme Grande École de GEM Grenoble, en spécialité Digital Marketing & Data Analytics.</p>
+      <div class="hero-btns">
+        <a href="assets/document_1.pdf" download="CV_Aya_Ait_Tajelt.pdf" class="btn-primary">⬇️ Télécharger mon CV</a>
+        <a href="#competences" class="btn-secondary">Voir mon portfolio →</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-initials">AA</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="reveal"><span class="stat-num">+78%</span><span class="stat-lbl">Taux d'engagement moyen</span></div>
+    <div class="reveal"><span class="stat-num" data-target="4371">0</span><span class="stat-lbl">Followers TikTok générés</span></div>
+    <div class="reveal"><span class="stat-num">22,5K</span><span class="stat-lbl">Vues sur une vidéo</span></div>
+    <div class="reveal"><span class="stat-num" data-target="4">0</span><span class="stat-lbl">Langues maîtrisées</span></div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<section class="timeline-section" id="parcours">
+  <div class="timeline-inner">
+    <div class="reveal">
+      <div class="section-label">Chronologie</div>
+      <h2 class="section-title">Mon parcours</h2>
+      <p class="section-sub">De la formation aux expériences terrain, une progression constante vers l'entrepreneuriat digital.</p>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <div class="timeline-date">Sept. 2026 → 2028</div>
+          <h3>Master GEM Grenoble — Programme Grande École</h3>
+          <p>Digital Marketing & Data Analytics · Grenoble École de Management</p>
+        </div>
+        <div></div>
+      </div>
+      <div class="timeline-item right reveal">
+        <div></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2025 – en cours</div>
+          <h3>Projet Glow Center — Entrepreneuriat</h3>
+          <p>Création d'un centre esthétique hybride · Business plan, logo, étude de marché, négociation mairie · Mantes-la-Jolie</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <div class="timeline-date">Fév. – Juil. 2025</div>
+          <h3>Assistante Commerciale & Marketing — Center Phone</h3>
+          <p>Site web SEO, social media, newsletters, relations fournisseurs Europe & Asie · Paris</p>
+        </div>
+        <div></div>
+      </div>
+      <div class="timeline-item right reveal">
+        <div></div>
+        <div class="timeline-content">
+          <div class="timeline-date">Sept. 2022 – Juil. 2025</div>
+          <h3>Bachelor Techniques de Commercialisation</h3>
+          <p>Marketing Digital, E-Business & Entrepreneuriat · UVSQ Paris-Saclay</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <div class="timeline-date">Mai – Juil. 2024</div>
+          <h3>Chargée Communication & Marketing — C1EURO</h3>
+          <p>Réseaux sociaux, fiches produits, maquettes UX · Paris</p>
+        </div>
+        <div></div>
+      </div>
+      <div class="timeline-item right reveal">
+        <div></div>
+        <div class="timeline-content">
+          <div class="timeline-date">Fév. – Mars 2023</div>
+          <h3>Community Manager — Esthetic Center</h3>
+          <p>Création du site web, gestion des réseaux sociaux, création de contenus visuels · Mantes-la-Jolie</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <div class="timeline-date">Sept. 2019 – Juin 2022</div>
+          <h3>Baccalauréat STMG avec mention</h3>
+          <p>Spécialité Gestion & Finance · Lycée Saint-Exupéry</p>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPETENCES -->
+<section class="competences-section" id="competences">
+  <div class="competences-inner">
+    <div class="reveal">
+      <div class="section-label">Portfolio</div>
+      <h2 class="section-title">Mes Compétences</h2>
+      <p class="section-sub">Des preuves concrètes, des résultats mesurables, des projets réels.</p>
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterTraces('all',this)">Toutes</button>
+      <button class="filter-btn" onclick="filterTraces('entrepreneuriat',this)">💡 Entrepreneuriat</button>
+      <button class="filter-btn" onclick="filterTraces('digital',this)">📱 Marketing Digital</button>
+      <button class="filter-btn" onclick="filterTraces('creation',this)">🎨 Création de contenu</button>
+      <button class="filter-btn" onclick="filterTraces('web',this)">🌐 Web & E-commerce</button>
+    </div>
+    <div class="traces-grid" id="tracesGrid">
+
+      <!-- GLOW CENTER -->
+      <div class="trace-card reveal" data-cat="entrepreneuriat" onclick="openModal('modal-glow')">
+        <div class="trace-img-placeholder">
+          <img src="assets/img_01.png" alt="Glow Center"/>
+        </div>
+        <div class="trace-body">
+          <div class="trace-tags"><span class="trace-tag">💡 Entrepreneuriat</span></div>
+          <div class="trace-title">Projet Glow Center — Institut & Coffee Shop</div>
+          <div class="trace-meta">Projet entrepreneurial · Mantes-la-Jolie · 2025–en cours</div>
+          <div class="trace-highlight">📊 CA prévu 98K€ an 1 · ROI en 11 mois</div>
+          <span class="trace-link">Voir le détail →</span>
+        </div>
+      </div>
+
+      <!-- ESTHETIC CENTER -->
+      <div class="trace-card reveal" data-cat="digital creation web" onclick="openModal('modal-esthetic')">
+        <div class="trace-img-placeholder">
+          <img src="assets/img_02.png" alt="Esthetic Center"/>
+        </div>
+        <div class="trace-body">
+          <div class="trace-tags"><span class="trace-tag">📱 Marketing Digital</span><span class="trace-tag">🌐 Web</span></div>
+          <div class="trace-title">Community Manager — Esthetic Center</div>
+          <div class="trace-meta">Fév. – Mars 2023 · Mantes-la-Jolie</div>
+          <div class="trace-highlight">🚀 Site web + TikTok + Instagram créés from scratch</div>
+          <span class="trace-link">Voir le détail →</span>
+        </div>
+      </div>
+
+      <!-- CENTER PHONE -->
+      <div class="trace-card reveal" data-cat="digital creation web" onclick="openModal('modal-phone')">
+        <div class="trace-img-placeholder">
+          <img src="assets/img_03.png" alt="Center Phone"/>
+        </div>
+        <div class="trace-body">
+          <div class="trace-tags"><span class="trace-tag">📱 Marketing Digital</span><span class="trace-tag">🌐 Web</span></div>
+          <div class="trace-title">Assistante Commerciale & Marketing — Center Phone</div>
+          <div class="trace-meta">Fév. – Juil. 2025 · Paris</div>
+          <div class="trace-highlight">📈 4 371 followers TikTok · 22,5K vues</div>
+          <span class="trace-link">Voir le détail →</span>
+        </div>
+      </div>
+
+      <!-- CAR EVO FREELANCE -->
+      <div class="trace-card reveal" data-cat="creation digital" onclick="openModal('modal-carevo')">
+        <div class="trace-img-placeholder">
+          <img src="assets/img_04.png" alt="Car Evo"/>
+        </div>
+        <div class="trace-body">
+          <div class="trace-tags"><span class="trace-tag">🎨 Création de contenu</span><span class="trace-tag">📱 Freelance</span></div>
+          <div class="trace-title">Communication Freelance — Car Evo Maroc</div>
+          <div class="trace-meta">Freelance · Marrakech, Maroc · 2024–en cours</div>
+          <div class="trace-highlight">🎬 Montage vidéo · Stories & posts engageants</div>
+          <span class="trace-link">Voir le détail →</span>
+        </div>
+      </div>
+
+      <!-- MAISON BORSETTA -->
+      <div class="trace-card reveal" data-cat="creation digital" onclick="openModal('modal-borsetta')">
+        <div class="trace-img-placeholder">
+          <img src="assets/img_05.jpg" alt="Maison Borsetta" style="object-position:top"/>
+        </div>
+        <div class="trace-body">
+          <div class="trace-tags"><span class="trace-tag">🎨 Création de contenu</span></div>
+          <div class="trace-title">Campagne Communication — Maison Borsetta</div>
+          <div class="trace-meta">Livrable académique · Bachelor TC · 2023-2024</div>
+          <div class="trace-highlight">💼 Stratégie 360° · Budget 277K€ · 12 slides</div>
+          <span class="trace-link">Voir le détail →</span>
+        </div>
+      </div>
+
+      <!-- C1EURO -->
+      <div class="trace-card reveal" data-cat="digital creation" onclick="openModal('modal-c1euro')">
+        <div class="trace-img-placeholder">🎯</div>
+        <div class="trace-body">
+          <div class="trace-tags"><span class="trace-tag">📱 Marketing Digital</span></div>
+          <div class="trace-title">Chargée Communication — C1EURO</div>
+          <div class="trace-meta">Mai – Juil. 2024 · Paris</div>
+          <div class="trace-highlight">📲 Réseaux sociaux · Fiches produits · Maquettes UX</div>
+          <span class="trace-link">Voir le détail →</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="skills-section">
+  <div class="skills-inner">
+    <div class="reveal">
+      <div class="section-label">Compétences</div>
+      <h2 class="section-title">Langues & Outils</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="reveal-left">
+        <div class="skill-group-title">Langues</div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-name">Français</span><span class="skill-pct">100%</span></div><div class="skill-bar"><div class="skill-fill" data-width="100"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-name">Italien (C2 — langue natale)</span><span class="skill-pct">100%</span></div><div class="skill-bar"><div class="skill-fill" data-width="100"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-name">Arabe (C2)</span><span class="skill-pct">100%</span></div><div class="skill-bar"><div class="skill-fill" data-width="100"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-name">Anglais (C1 — TOEIC 865)</span><span class="skill-pct">85%</span></div><div class="skill-bar"><div class="skill-fill" data-width="85"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-name">Espagnol (B1 — en cours)</span><span class="skill-pct">60%</span></div><div class="skill-bar"><div class="skill-fill" data-width="60"></div></div></div>
+      </div>
+      <div class="reveal-right">
+        <div class="skill-group-title">Outils & Technologies</div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-name">WordPress / Shopify / PrestaShop</span><span class="skill-pct">85%</span></div><div class="skill-bar"><div class="skill-fill" data-width="85"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-name">Canva · Montage vidéo</span><span class="skill-pct">90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-name">Social Media (TikTok, Insta, FB)</span><span class="skill-pct">92%</span></div><div class="skill-bar"><div class="skill-fill" data-width="92"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-name">SEO / HTML-CSS / SQL bases</span><span class="skill-pct">70%</span></div><div class="skill-bar"><div class="skill-fill" data-width="70"></div></div></div>
+        <div class="skill-item"><div class="skill-header"><span class="skill-name">Pack Office / Google Suite / Excel</span><span class="skill-pct">80%</span></div><div class="skill-bar"><div class="skill-fill" data-width="80"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BILAN -->
+<section class="bilan-section">
+  <div class="bilan-inner">
+    <div class="reveal-left">
+      <div class="section-label">Synthèse</div>
+      <h2 class="section-title">Mon profil en quelques mots</h2>
+      <p class="bilan-text">Je ne suis pas quelqu'un qui attend d'avoir le titre pour créer. J'ai lancé des identités visuelles, construit des sites e-commerce, géré des communautés de plusieurs milliers de personnes, et monté un business plan complet pour un projet que j'ai voulu voir exister pour de vrai.</p>
+      <p class="bilan-text">Ce qui me distingue : la capacité à passer de l'idée à l'exécution, avec autant d'aisance sur la stratégie que sur les outils concrets — du montage vidéo au prévisionnel financier.</p>
+    </div>
+    <div class="bilan-right reveal-right">
+      <div class="bilan-card"><h4>Profil</h4><p>Profil marketing digital & entrepreneuriat, orientée création, résultats et terrain</p></div>
+      <div class="bilan-card"><h4>Points forts</h4><p>Création de contenu engageant · Web & e-commerce · Lancement de marques · Multilinguisme · Vision entrepreneuriale</p></div>
+      <div class="bilan-card"><h4>Certifications</h4><p>TOEIC 865 · Tage Mage 265 · Social Listening Hootsuite</p></div>
+      <div class="bilan-card"><h4>Projet</h4><p>Master GEM Grenoble · Digital Marketing & Data Analytics · Sept. 2026</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-inner">
+    <div class="reveal-left">
+      <div class="section-label">Me contacter</div>
+      <h2 class="section-title">Travaillons ensemble</h2>
+      <p style="font-size:.9rem;color:var(--gray);margin-bottom:32px;">Une opportunité, un projet, une collaboration ?<br>N'hésite pas à me contacter directement.</p>
+      <div class="contact-item"><div class="contact-icon">📱</div><div><div class="contact-label">Téléphone</div><div class="contact-value">07 66 09 13 49</div></div></div>
+      <div class="contact-item"><div class="contact-icon">✉️</div><div><div class="contact-label">Email</div><div class="contact-value">ayaaittajelt4@gmail.com</div></div></div>
+      <div class="contact-item"><div class="contact-icon">📍</div><div><div class="contact-label">Localisation</div><div class="contact-value">Paris (75019)</div></div></div>
+    </div>
+    <div class="reveal-right">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div><label class="form-label">Nom complet</label><input type="text" class="form-input" placeholder="Votre nom"/></div>
+        <div><label class="form-label">Adresse email</label><input type="email" class="form-input" placeholder="votre@email.com"/></div>
+        <div><label class="form-label">Objet</label><input type="text" class="form-input" placeholder="Opportunité, collaboration..."/></div>
+        <div><label class="form-label">Message</label><textarea class="form-textarea" rows="4" placeholder="Votre message..."></textarea></div>
+        <button class="form-btn">Envoyer le message</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 <span>Aya Ait Tajelt</span> · Portfolio · GEM Grenoble 2026–2028</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+
+<!-- MODAL GLOW CENTER -->
+<div class="modal-overlay" id="modal-glow">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-glow')">✕</button>
+    <div class="modal-tags">
+      <span class="modal-tag dark">💡 Entrepreneuriat</span>
+      <span class="modal-tag outline">📊 Business Plan</span>
+      <span class="modal-tag outline">🎨 Identité visuelle</span>
+    </div>
+    <h2>Projet Glow Center — Institut & Coffee Shop</h2>
+    <div class="modal-source">📅 Projet entrepreneurial · Mantes-la-Jolie · 2025 – en cours</div>
+    <div class="modal-section">
+      <div class="modal-section-title">Contexte</div>
+      <p>Conception et pilotage complet d'un projet de création d'entreprise hybride : un centre esthétique (lumière pulsée, soins du regard) couplé à un salon de coiffure et un coffee corner. Projet soumis à la commission de l'Office du Commerce de Mantes-la-Jolie, avec dossier de présentation professionnel complet.</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Ce que j'ai réalisé</div>
+      <div class="modal-tools">
+        <span class="tool-tag">Business Plan complet</span><span class="tool-tag">Identité visuelle & logo</span><span class="tool-tag">Étude de marché</span>
+        <span class="tool-tag">Prévisionnel financier</span><span class="tool-tag">Négociation mairie</span><span class="tool-tag">Visites de locaux</span>
+      </div>
+      <p>Création du logo GC (Institut & Coffee Shop), rédaction du dossier de présentation soumis à la commission, étude de marché locale (bassin de 100 000 habitants), prévisionnel financier sur 6 ans, plan d'aménagement du local, sélection des fournisseurs et des équipements.</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Chiffres clés</div>
+      <div class="modal-result-box">📊 CA prévisionnel an 1 : 98 110 € HT · Bénéfice net an 1 : 21 775 € · ROI en 11 mois · Investissement initial : 20 645 € sur fonds propres · 2 emplois créés dès l'ouverture</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Aperçu du logo & identité visuelle</div>
+      <div class="modal-gallery">
+        <img src="assets/img_06.png" alt="Façade Glow Center" onclick="openLightbox(this.src)"/>
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Télécharger le dossier</div>
+      <a href="assets/document_2.pdf" download="Dossier_Glow_Center.pdf" class="modal-download-btn">⬇️ Dossier de présentation (PDF)</a>
+      <a href="assets/document_3.pdf" download="Campagne_Maison_Borsetta.pdf" class="modal-download-btn" style="margin-left:10px">⬇️ Présentation campagne (PDF)</a>
+    </div>
+    <div class="modal-quote">"Ce projet, c'est la preuve que je sais passer d'une idée à un dossier structuré et défendable devant une commission officielle."</div>
+  </div>
+</div>
+
+<!-- MODAL ESTHETIC CENTER -->
+<div class="modal-overlay" id="modal-esthetic">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-esthetic')">✕</button>
+    <div class="modal-tags">
+      <span class="modal-tag dark">📱 Marketing Digital</span>
+      <span class="modal-tag mug">🌐 Web</span>
+    </div>
+    <h2>Community Manager — Esthetic Center</h2>
+    <div class="modal-source">📅 Fév. – Mars 2023 · Esthetic Center · Mantes-la-Jolie</div>
+    <div class="modal-section">
+      <div class="modal-section-title">Contexte</div>
+      <p>Mission de community management pour un institut de beauté local. Création complète de la présence digitale du centre : site web, réseaux sociaux, et contenus visuels et promotionnels.</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Ce que j'ai réalisé</div>
+      <div class="modal-tools">
+        <span class="tool-tag">WordPress</span><span class="tool-tag">Canva</span><span class="tool-tag">TikTok</span><span class="tool-tag">Instagram</span><span class="tool-tag">Création de contenus</span>
+      </div>
+      <p>Développement du site web complet (estheticcentermanteslajolie.fr), création et gestion du compte TikTok (@estheticenter.mantes), gestion Instagram, et création de supports visuels promotionnels (flyers, posts, stories).</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Résultats</div>
+      <div class="modal-result-box">🚀 Site e-commerce live · TikTok lancé · Contenus engageants créés · Flyer Saint-Valentin diffusé</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Aperçus</div>
+      <div class="modal-gallery">
+        <img src="assets/img_07.png" alt="Site Esthetic Center" onclick="openLightbox(this.src)"/>
+        <img src="assets/img_08.png" alt="Catégories site" onclick="openLightbox(this.src)"/>
+        <img src="assets/img_09.png" alt="TikTok Esthetic Center" onclick="openLightbox(this.src)"/>
+        <img src="assets/img_10.png" alt="Post Instagram" onclick="openLightbox(this.src)"/>
+        <img src="assets/img_11.png" alt="Photo produits" onclick="openLightbox(this.src)"/>
+        <img src="assets/img_12.png" alt="Flyer Saint-Valentin" onclick="openLightbox(this.src)"/>
+      </div>
+    </div>
+    <div class="modal-quote">"Cette première expérience m'a appris à construire une présence digitale complète en partant de zéro."</div>
+  </div>
+</div>
+
+<!-- MODAL CENTER PHONE -->
+<div class="modal-overlay" id="modal-phone">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-phone')">✕</button>
+    <div class="modal-tags">
+      <span class="modal-tag dark">📱 Marketing Digital</span>
+      <span class="modal-tag mug">🌐 E-commerce</span>
+    </div>
+    <h2>Assistante Commerciale & Marketing — Center Phone</h2>
+    <div class="modal-source">📅 Fév. – Juil. 2025 · Center Phone · Paris</div>
+    <div class="modal-section">
+      <div class="modal-section-title">Contexte</div>
+      <p>Mission complète d'assistante commerciale et marketing dans une boutique spécialisée en réparation et vente de smartphones. Gestion simultanée du digital, du commerce et de la relation fournisseurs.</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Ce que j'ai réalisé</div>
+      <div class="modal-tools">
+        <span class="tool-tag">WordPress / SEO</span><span class="tool-tag">TikTok</span><span class="tool-tag">Instagram</span><span class="tool-tag">Facebook</span>
+        <span class="tool-tag">Newsletter / KPI</span><span class="tool-tag">Fiches produits</span><span class="tool-tag">Relation fournisseurs</span>
+      </div>
+      <p>Création et alimentation du site web avec optimisation SEO, rédaction de fiches produits, création de newsletters avec analyse des KPI, gestion des réseaux sociaux (TikTok, Instagram, Facebook), et maintien des contacts avec les fournisseurs en Europe et en Asie.</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Résultats</div>
+      <div class="modal-result-box">📈 4 371 followers TikTok · Vidéo à 22,5K vues · Vidéo à 21K vues · Site e-commerce opérationnel · Relations fournisseurs Europe & Asie</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Aperçus</div>
+      <div class="modal-gallery">
+        <img src="assets/img_13.png" alt="TikTok Center Phone" onclick="openLightbox(this.src)"/>
+        <img src="assets/img_14.png" alt="Instagram Center Phone" onclick="openLightbox(this.src)"/>
+        <img src="assets/img_15.png" alt="Fiche produit site" onclick="openLightbox(this.src)"/>
+      </div>
+    </div>
+    <div class="modal-quote">"Gérer à la fois le digital, le contenu et les fournisseurs m'a appris la rigueur du commerce réel."</div>
+  </div>
+</div>
+
+<!-- MODAL CAR EVO -->
+<div class="modal-overlay" id="modal-carevo">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-carevo')">✕</button>
+    <div class="modal-tags">
+      <span class="modal-tag dark">🎨 Création de contenu</span>
+      <span class="modal-tag outline">🇲🇦 Freelance Maroc</span>
+    </div>
+    <h2>Communication Freelance — Car Evo</h2>
+    <div class="modal-source">📅 Freelance · Marrakech, Maroc · 2024 – en cours</div>
+    <div class="modal-section">
+      <div class="modal-section-title">Contexte</div>
+      <p>Mission de communication en freelance pour Car Evo, un garage spécialisé en entretien automobile et préparation de véhicules de luxe, basé à Marrakech. Création et gestion complète des contenus digitaux à distance.</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Ce que j'ai réalisé</div>
+      <div class="modal-tools">
+        <span class="tool-tag">Montage vidéo</span><span class="tool-tag">Instagram Stories</span><span class="tool-tag">Canva</span><span class="tool-tag">Création visuelle</span>
+      </div>
+      <p>Montage de vidéos engageantes envoyées au client pour diffusion, création de stories et posts visuels pour la communication Instagram du garage, conception des supports de présentation des services.</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Aperçu</div>
+      <div class="modal-gallery">
+        <img src="assets/img_16.png" alt="Car Evo Story" onclick="openLightbox(this.src)"/>
+      </div>
+    </div>
+    <div class="modal-quote">"Travailler en freelance à distance pour un client au Maroc, c'est la preuve qu'une bonne communication n'a pas de frontières."</div>
+  </div>
+</div>
+
+<!-- MODAL MAISON BORSETTA -->
+<div class="modal-overlay" id="modal-borsetta">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-borsetta')">✕</button>
+    <div class="modal-tags">
+      <span class="modal-tag dark">🎨 Livrable académique</span>
+      <span class="modal-tag outline">📊 Stratégie communication</span>
+    </div>
+    <h2>Campagne de Communication — Maison Borsetta</h2>
+    <div class="modal-source">📅 Bachelor TC · UVSQ Paris-Saclay · 2023-2024</div>
+    <div class="modal-section">
+      <div class="modal-section-title">Contexte</div>
+      <p>Livrable académique de stratégie de communication pour Maison Borsetta, marque franco-italienne fictive spécialisée dans les sacs à main en cuir écoresponsable. Conception complète d'une campagne 360°.</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Ce que j'ai réalisé</div>
+      <div class="modal-tools">
+        <span class="tool-tag">Stratégie 360°</span><span class="tool-tag">Logo & identité visuelle</span><span class="tool-tag">Plan média</span><span class="tool-tag">Budget campagne</span><span class="tool-tag">Ciblage & segmentation</span>
+      </div>
+      <p>Création du logo Maison Borsetta, définition de la stratégie de communication (objectifs +10% PDM, +12% CA), choix des canaux (Instagram, TikTok, influenceurs, Fashion Week), messages clés, et budget de campagne détaillé.</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Chiffres clés</div>
+      <div class="modal-result-box">📊 Budget campagne : 277 000 € · PDM cible : 25% · CA cible : 2,8M€ · Stratégie sur 9 mois</div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Télécharger la présentation</div>
+      <a href="assets/document_3.pdf" download="Campagne_Maison_Borsetta.pdf" class="modal-download-btn">⬇️ Présentation complète (PDF)</a>
+    </div>
+    <div class="modal-quote">"De la création du logo à la stratégie média, j'ai géré ce projet comme une vraie marque."</div>
+  </div>
+</div>
+
+<!-- MODAL C1EURO -->
+<div class="modal-overlay" id="modal-c1euro">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-c1euro')">✕</button>
+    <div class="modal-tags">
+      <span class="modal-tag dark">📱 Marketing Digital</span>
+      <span class="modal-tag outline">🎨 UX / Contenu</span>
+    </div>
+    <h2>Chargée Communication & Marketing — C1EURO</h2>
+    <div class="modal-source">📅 Mai – Juil. 2024 · C1EURO · Paris</div>
+    <div class="modal-section">
+      <div class="modal-section-title">Contexte</div>
+      <p>Mission de communication et marketing digital au sein de C1EURO, avec une triple responsabilité : gestion des réseaux sociaux, création des contenus produits, et contribution à l'amélioration de l'interface utilisateur de l'application.</p>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Ce que j'ai réalisé</div>
+      <div class="modal-tools">
+        <span class="tool-tag">Réseaux sociaux</span><span class="tool-tag">Fiches produits</span><span class="tool-tag">Maquettes UX</span><span class="tool-tag">Canva</span>
+      </div>
+      <p>Création et gestion des réseaux sociaux de l'application, conception et rédaction des fiches produits, et réalisation de maquettes UX pour améliorer l'expérience utilisateur de l'interface.</p>
+    </div>
+    <div class="modal-result-box">📲 Réseaux sociaux lancés · Fiches produits rédigées · Maquettes UX livrées</div>
+    <div class="modal-quote">"Une expérience qui m'a permis de toucher à la fois au contenu, au design et à l'expérience utilisateur."</div>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('scroll',()=>{
+    document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50);
+  });
+
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        e.target.querySelectorAll('.skill-fill').forEach(b=>{ b.style.width=b.dataset.width+'%'; });
+        e.target.querySelectorAll('.stat-num[data-target]').forEach(el=>counter(el,+el.dataset.target));
+      }
+    });
+  },{threshold:.15});
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>obs.observe(el));
+
+  function counter(el,t){
+    let s=0,step=t/(1500/16);
+    const tm=setInterval(()=>{
+      s+=step;
+      if(s>=t){el.textContent=t.toLocaleString('fr-FR');clearInterval(tm);}
+      else el.textContent=Math.floor(s).toLocaleString('fr-FR');
+    },16);
+  }
+
+  function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+  function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+  document.querySelectorAll('.modal-overlay').forEach(o=>{
+    o.addEventListener('click',function(e){if(e.target===this){this.classList.remove('open');document.body.style.overflow='';}  });
+  });
+
+  function filterTraces(cat,btn){
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.trace-card').forEach(c=>{
+      c.style.display=(cat==='all'||c.dataset.cat.includes(cat))?'block':'none';
+    });
+  }
+
+  function openLightbox(src){
+    document.getElementById('lightbox-img').src=src;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeLightbox(){
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow='';
+  }
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeLightbox(); document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open')); document.body.style.overflow=''; } });
+</script>
+</body>
+</html>
